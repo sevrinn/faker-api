@@ -3,13 +3,55 @@ const faker = require("faker");
 const app = express();
 const port = 8000;
 
-console.log(faker.name.firstName());
+// Create 2 functions: createUser and createCompany that each return an object of properties
+const createUser = () => {
+  const newUser = {
+    _id:faker.datatype.uuid(),
+    firstName:faker.name.firstName(),
+    lastName:faker.name.lastName(),
+    phoneNumber:faker.phone.phoneNumber(),
+    email:faker.internet.email(),
+    password:faker.internet.password(),
+  }
+  return newUser;
+}
 
-// app.get("/api/address", (req, res) => {
-//   res.json({message: "Hello World"});
-// })
+const createCompany = () => {
+  const newCompany = {
+    _id:faker.datatype.uuid(),
+    name:faker.company.companyName(),
+    address: {
+      street:faker.address.streetAddress(),
+      city:faker.address.cityName(),
+      state:faker.address.stateAbbr(),
+      zipCode:faker.address.zipCodeByState(),
+      country:faker.address.country(),
+    },
+  }
+  return newCompany;
+}
 
-// app.listen( port, () => console.log(`Listening on port: ${port}`) );
+
+//creates api route that returns a new user
+app.get("/api/people/new", (req, res) => {
+  const user = createUser();
+  res.json(user);
+})
+//creates api route that returns a new company
+app.get("/api/company/new", (req, res) => {
+  const company = createCompany();
+  res.json(company);
+})
+
+//creates api rout that returns new user and company
+app.get("/api/company", (req, res) => {
+  const user = createUser();
+  const company = createCompany();
+  res.json({user, company});
+})
+
+
+app.listen( port, () => console.log(`Listening on port: ${port}`) );
 
 /**
  * Import the express module using require()
